@@ -48,14 +48,24 @@ class MainFragment : Fragment() {
         viewModel.start()
 
         viewModel.status.observe(this, Observer {
-            when (it) {
-                MainState.Loading -> {
-                }
-                MainState.Playing -> {
-                }
-                MainState.Stopped -> {
-                }
-            }
+            it?.handleWith({ handleLoading() }, { handlePlaying() }, { handleStopped() })
         })
+    }
+
+    private fun handleLoading() {
+        loading.visibility = View.VISIBLE
+        play_pause.visibility = View.GONE
+    }
+
+    private fun handlePlaying() {
+        loading.visibility = View.GONE
+        play_pause.visibility = View.VISIBLE
+        play_pause.setImageResource(R.drawable.ic_pause_circle_outline_accent_24dp)
+    }
+
+    private fun handleStopped() {
+        loading.visibility = View.GONE
+        play_pause.visibility = View.VISIBLE
+        play_pause.setImageResource(R.drawable.ic_play_circle_outline_accent_24dp)
     }
 }

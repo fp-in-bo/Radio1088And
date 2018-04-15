@@ -5,10 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.content.Context
 import android.media.MediaPlayer
-import com.fpinbo.radio1088.R
 import javax.inject.Inject
-
-private val fileRes = R.raw.la_tigre_di_carta_puntata_1
 
 class MainViewModel @Inject constructor(
     private val context: Context) : ViewModel() {
@@ -21,8 +18,7 @@ class MainViewModel @Inject constructor(
 
         if (!mediaPlayer.isPlaying) {
             mutableLiveData.value = MainState.Loading
-            val afd = context.resources.openRawResourceFd(fileRes)
-            mediaPlayer.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
+            mediaPlayer.setDataSource("https://api.spreaker.com/v2/episodes/14524218/play")
             mediaPlayer.prepareAsync()
             mediaPlayer.setOnPreparedListener {
                 mediaPlayer.start()
@@ -37,8 +33,10 @@ class MainViewModel @Inject constructor(
     fun togglePlayStatus() {
         if (mediaPlayer.isPlaying) {
             mediaPlayer.pause()
+            mutableLiveData.value = MainState.Stopped
         } else {
             mediaPlayer.start()
+            mutableLiveData.value = MainState.Playing
         }
     }
 

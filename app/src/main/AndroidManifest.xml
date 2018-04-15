@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.fpinbo.radio1088">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
             android:name="com.fpinbo.radio1088.DemoApplication"
             android:allowBackup="true"

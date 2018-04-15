@@ -1,17 +1,25 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              tools:context="com.fpinbo.radio1088.main.MainFragment">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
-    <Button
+
+    <ImageView
             android:id="@+id/play_pause"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="96dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="@string/play"
-    />
+            android:layout_gravity="center"
+            android:src="@drawable/ic_play_circle_outline_accent_24dp"
+            android:text="@string/play"/>
 
 
-</LinearLayout>
+    <ProgressBar
+            android:id="@+id/loading"
+            android:layout_width="96dp"
+            android:layout_gravity="center"
+            android:layout_height="96dp"/>
+
+
+</FrameLayout>
+
