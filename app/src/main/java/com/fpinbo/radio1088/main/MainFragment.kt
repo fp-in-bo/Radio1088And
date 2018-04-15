@@ -9,8 +9,8 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.danielecampogiani.demo.R
 import com.fpinbo.radio1088.DemoApplication
+import com.fpinbo.radio1088.R
 import kotlinx.android.synthetic.main.fragment_main.*
 import javax.inject.Inject
 
@@ -40,11 +40,22 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val viewModel = ViewModelProviders.of(this, viewModelFactory)[MainViewModel::class.java]
 
-        viewModel.liveData.observe(this, Observer {
-            text_view.text = it
+        play_pause.setOnClickListener {
+            viewModel.togglePlayStatus()
+        }
+        viewModel.start()
+
+        viewModel.status.observe(this, Observer {
+            when (it) {
+                MainState.Loading -> {
+                }
+                MainState.Playing -> {
+                }
+                MainState.Stopped -> {
+                }
+            }
         })
     }
 }

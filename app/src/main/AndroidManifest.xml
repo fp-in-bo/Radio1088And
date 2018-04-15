@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.danielecampogiani.demo">
+          package="com.fpinbo.radio1088">
 
     <application
             android:name="com.fpinbo.radio1088.DemoApplication"

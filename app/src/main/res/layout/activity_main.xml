@@ -4,4 +4,4 @@
              android:id="@+id/fragment_container"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="com.danielecampogiani.demo.com.fpinbo.radio1088.main.MainActivity"/>
+             tools:context="com.fpinbo.radio1088.main.MainActivity"/>

@@ -7,7 +7,7 @@ apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.danielecampogiani.demo"
+        applicationId "com.fpinbo.radio1088"
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
@@ -28,7 +28,6 @@ dependencies {
     implementation "com.android.support.constraint:constraint-layout:${versions.constraint_layout}"
 
     implementation "android.arch.lifecycle:extensions:${versions.arch_comp}"
-    implementation 'com.android.support:support-v4:27.0.2'
     kapt "android.arch.lifecycle:compiler:${versions.arch_comp}"
 
     implementation "com.google.dagger:dagger:${versions.dagger}"
