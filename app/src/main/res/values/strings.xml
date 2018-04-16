@@ -2,5 +2,7 @@
     <string name="app_name">Radio1088</string>
     <string name="play">Play</string>
     <string name="pause">Pause</string>
+    <string name="playback_notification_channel">Playback</string>
+    <string name="start_streaming">Start Streaming</string>
 
 </resources>
