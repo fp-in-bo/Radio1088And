@@ -38,4 +38,10 @@ dependencies {
     androidTestImplementation("com.android.support.test.espresso:espresso-core:${versions.espresso}", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.4.0'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+
 }
