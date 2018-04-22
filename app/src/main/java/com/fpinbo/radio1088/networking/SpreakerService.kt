@@ -1,5 +1,7 @@
 package com.fpinbo.radio1088.networking
 
+import com.squareup.moshi.KotlinJsonAdapterFactory
+import com.squareup.moshi.Moshi
 import io.reactivex.Single
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -14,7 +16,10 @@ interface SpreakerService {
         fun create(): SpreakerService {
             val retrofit = Retrofit.Builder()
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .addConverterFactory(MoshiConverterFactory.create())
+                    .addConverterFactory(MoshiConverterFactory.create(Moshi.Builder()
+                            .add(KotlinJsonAdapterFactory())
+                            .build())
+                    )
                     .baseUrl("https://api.spreaker.com/v2/")
                     .build()
 

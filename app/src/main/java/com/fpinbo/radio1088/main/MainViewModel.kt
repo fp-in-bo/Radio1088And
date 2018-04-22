@@ -28,7 +28,7 @@ class MainViewModel @Inject constructor(
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe { response: LastEpisode ->
-                startMediaPlayerForEpisode(response.response.items.last().episode_id)
+                startMediaPlayerForEpisode(response.response.items.last().episodeId)
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.fpinbo.radio1088.networking
 
+import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import org.junit.Test
 
@@ -23,13 +24,15 @@ class LastEpisodeTest {
                 "]," +
                 "\"next_url\":\"url\"}}"
 
-        val sut = Moshi.Builder().build()
+        val sut = Moshi.Builder()
+                .add(KotlinJsonAdapterFactory())
+                .build()
                 .adapter(LastEpisode::class.java)
 
         val actual = sut.fromJson(json)
         val item = actual?.response?.items?.last()
 
-        assert(item?.episode_id == episodeId)
-        assert(item?.site_url == siteUrl)
+        assert(item?.episodeId == episodeId)
+        assert(item?.siteUrl == siteUrl)
     }
 }
