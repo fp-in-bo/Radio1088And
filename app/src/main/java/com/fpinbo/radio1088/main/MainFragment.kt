@@ -9,15 +9,12 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.fpinbo.radio1088.DemoApplication
 import com.fpinbo.radio1088.R
+import com.fpinbo.radio1088.RadioApplication
 import kotlinx.android.synthetic.main.fragment_main.*
 import javax.inject.Inject
 
 class MainFragment : Fragment() {
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     companion object {
 
@@ -29,8 +26,11 @@ class MainFragment : Fragment() {
         }
     }
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
     override fun onAttach(context: Context) {
-        DemoApplication.getAppComponent(context).inject(this)
+        RadioApplication.getAppComponent(context).inject(this)
         super.onAttach(context)
     }
 
@@ -42,30 +42,43 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val viewModel = ViewModelProviders.of(this, viewModelFactory)[MainViewModel::class.java]
 
-        play_pause.setOnClickListener {
-            viewModel.togglePlayStatus()
-        }
-        viewModel.start()
-
         viewModel.status.observe(this, Observer {
-            it?.handleWith({ handleLoading() }, { handlePlaying() }, { handleStopped() })
+            it?.handleWith({ handleLoading() }, { handleReady() }, { handlePlaying() }, { handleStopped() })
         })
+
+        start_streaming.setOnClickListener {
+            viewModel.startStreaming()
+        }
+
+        viewModel.start()
     }
 
     private fun handleLoading() {
         loading.visibility = View.VISIBLE
         play_pause.visibility = View.GONE
+        start_streaming.visibility = View.VISIBLE
+        start_streaming.isEnabled = false
+    }
+
+    private fun handleReady() {
+        loading.visibility = View.GONE
+        play_pause.visibility = View.GONE
+        start_streaming.isEnabled = true
     }
 
     private fun handlePlaying() {
         loading.visibility = View.GONE
         play_pause.visibility = View.VISIBLE
-        play_pause.setImageResource(R.drawable.ic_pause_circle_outline_accent_24dp)
+        start_streaming.visibility = View.GONE
+        start_streaming.isEnabled = false
+        play_pause.setText(R.string.pause)
     }
 
     private fun handleStopped() {
         loading.visibility = View.GONE
         play_pause.visibility = View.VISIBLE
-        play_pause.setImageResource(R.drawable.ic_play_circle_outline_accent_24dp)
+        start_streaming.visibility = View.GONE
+        start_streaming.isEnabled = false
+        play_pause.setText(R.string.play)
     }
 }
