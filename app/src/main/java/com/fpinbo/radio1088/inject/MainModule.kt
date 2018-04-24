@@ -1,8 +1,8 @@
 package com.fpinbo.radio1088.inject
 
 import android.arch.lifecycle.ViewModel
-import com.fpinbo.radio1088.main.MainService
-import com.fpinbo.radio1088.main.MainServiceImpl
+import com.fpinbo.radio1088.dispatcher.CommandDispatcher
+import com.fpinbo.radio1088.dispatcher.CommandDispatcherImpl
 import com.fpinbo.radio1088.main.MainViewModel
 import dagger.Binds
 import dagger.Module
@@ -17,5 +17,5 @@ internal abstract class MainModule {
     internal abstract fun bindMainViewModel(viewModel: MainViewModel): ViewModel
 
     @Binds
-    internal abstract fun bindMainService(serviceImpl: MainServiceImpl): MainService
+    internal abstract fun bindCommandDispatcher(commandDispatcher: CommandDispatcherImpl): CommandDispatcher
 }
