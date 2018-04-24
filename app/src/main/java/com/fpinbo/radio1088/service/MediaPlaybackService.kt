@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.AudioAttributes
 import android.media.AudioManager
@@ -21,6 +22,9 @@ import android.support.v4.media.app.NotificationCompat
 import android.support.v4.media.session.MediaButtonReceiver
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.fpinbo.radio1088.R
 
 private const val notificationId = 1
@@ -33,6 +37,9 @@ class MediaPlaybackService : MediaBrowserServiceCompat(), AudioManager.OnAudioFo
     companion object {
         const val CUSTOM_ACTION = "CUSTOM_ACTION"
         const val START_STREAMING = "START_STREAMING"
+        const val SOURCE_URL = "SOURCE_URL"
+        const val TITLE = "TITLE"
+        const val IMAGE_URL = "IMAGE_URL"
     }
 
     private val mediaPlayer by lazy { initMediaPlayer() }
@@ -140,20 +147,24 @@ class MediaPlaybackService : MediaBrowserServiceCompat(), AudioManager.OnAudioFo
         NotificationManagerCompat.from(this).notify(notificationId, builder.build())
     }
 
-    private fun initMediaSessionMetadata() {
-        val metadataBuilder = MediaMetadataCompat.Builder()
-        //Notification icon in card
-        metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, BitmapFactory.decodeResource(resources, R.drawable.ic_radio_accent_24dp))
-        metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, BitmapFactory.decodeResource(resources, R.drawable.ic_radio_accent_24dp))
+    private fun initMediaSessionMetadata(title: String, imageUrl: String, actionWhenReady: () -> Unit) {
 
-        //lock screen icon for pre lollipop
-        metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ART, BitmapFactory.decodeResource(resources, R.drawable.ic_radio_accent_24dp))
-        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, "Title")
-        metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, "Subtitle")
-        metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, 1)
-        metadataBuilder.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, 1)
+        Glide.with(this).asBitmap().load(imageUrl).into(object : SimpleTarget<Bitmap>() {
+            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                val metadataBuilder = MediaMetadataCompat.Builder()
+                metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, resource)
+                //lock screen icon for pre lollipop
+                metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_ART, resource)
 
-        mediaSession.setMetadata(metadataBuilder.build())
+                //Notification icon in card
+                metadataBuilder.putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, BitmapFactory.decodeResource(resources, R.drawable.ic_radio_accent_24dp))
+                metadataBuilder.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, title)
+
+                mediaSession.setMetadata(metadataBuilder.build())
+
+                actionWhenReady()
+            }
+        })
     }
 
     override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): BrowserRoot? {
@@ -168,7 +179,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat(), AudioManager.OnAudioFo
         val customActions = intent?.getStringExtra(CUSTOM_ACTION)
         when (customActions) {
             START_STREAMING -> {
-                startStreaming()
+                startStreaming(intent.getStringExtra(SOURCE_URL), intent.getStringExtra(TITLE), intent.getStringExtra(IMAGE_URL))
             }
         }
 
@@ -176,12 +187,13 @@ class MediaPlaybackService : MediaBrowserServiceCompat(), AudioManager.OnAudioFo
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun startStreaming() {
-        mediaPlayer.setDataSource("https://api.spreaker.com/v2/episodes/14524218/play")
+    private fun startStreaming(sourceUrl: String, title: String, imageUrl: String) {
+        mediaPlayer.setDataSource(sourceUrl)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
-            initMediaSessionMetadata()
-            play()
+            initMediaSessionMetadata(title, imageUrl) {
+                play()
+            }
         }
     }
 
