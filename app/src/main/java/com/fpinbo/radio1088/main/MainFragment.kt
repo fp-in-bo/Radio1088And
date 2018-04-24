@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.fpinbo.radio1088.R
 import com.fpinbo.radio1088.RadioApplication
 import kotlinx.android.synthetic.main.fragment_main.*
@@ -43,14 +44,12 @@ class MainFragment : Fragment() {
         val viewModel = ViewModelProviders.of(this, viewModelFactory)[MainViewModel::class.java]
 
         viewModel.status.observe(this, Observer {
-            it?.handleWith({ handleLoading() }, { handleReady() }, { handlePlaying() }, { handleStopped() })
+            it?.handleWith({ handleLoading() }, { handlePlaying() }, { handleStopped() }, { handleError(it.message) })
         })
 
         start_streaming.setOnClickListener {
             viewModel.startStreaming()
         }
-
-        viewModel.start()
     }
 
     private fun handleLoading() {
@@ -58,12 +57,6 @@ class MainFragment : Fragment() {
         play_pause.visibility = View.GONE
         start_streaming.visibility = View.VISIBLE
         start_streaming.isEnabled = false
-    }
-
-    private fun handleReady() {
-        loading.visibility = View.GONE
-        play_pause.visibility = View.GONE
-        start_streaming.isEnabled = true
     }
 
     private fun handlePlaying() {
@@ -80,5 +73,9 @@ class MainFragment : Fragment() {
         start_streaming.visibility = View.GONE
         start_streaming.isEnabled = false
         play_pause.setText(R.string.play)
+    }
+
+    private fun handleError(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 }
