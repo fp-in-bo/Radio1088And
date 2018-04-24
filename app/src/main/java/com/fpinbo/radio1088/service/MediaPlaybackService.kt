@@ -48,8 +48,6 @@ class MediaPlaybackService : MediaBrowserServiceCompat(), AudioManager.OnAudioFo
 
     override fun onCreate() {
         super.onCreate()
-        initMediaPlayer()
-        initMediaSession()
         registerNoisyReceiver()
     }
 
